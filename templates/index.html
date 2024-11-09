@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="converter-container">
+    <h1>Unit Converter</h1>
+
+    <div class="converter-card">
+        <form action="/convert" method="post">
+            <!-- Input field for value -->
+            <label for="value">Value:</label>
+            <input type="number" name="value" id="value" placeholder="Enter value" required>
+
+            <!-- Dropdown for conversion type -->
+            <label for="conversion_type">Conversion Type:</label>
+            <select name="conversion_type" id="conversion_type" required onchange="updateUnits()">
+                <option value="length">Length</option>
+                <option value="weight">Weight</option>
+                <option value="temperature">Temperature</option>
+            </select>
+
+            <!-- Dropdown for from unit -->
+            <label for="unit_from">From Unit:</label>
+            <select name="from_unit" id="from_unit" required>
+                <!-- Length units by default -->
+                <option value="m">Meters</option>
+                <option value="km">Kilometers</option>
+                <option value="ft">Feet</option>
+                <option value="inch">Inches</option>
+            </select>
+
+            <!-- Dropdown for to unit -->
+            <label for="unit_to">To Unit:</label>
+            <select name="to_unit" id="to_unit" required>
+                <!-- Length units by default -->
+                <option value="m">Meters</option>
+                <option value="km">Kilometers</option>
+                <option value="ft">Feet</option>
+                <option value="inch">Inches</option>
+            </select>
+
+            <!-- Submit button -->
+            <button type="submit" class="convert-button">Convert</button>
+        </form>
+
+        <!-- Display the result if available -->
+        {% if result %}
+            <div class="result">
+                <h2>Result: {{ result }}</h2>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function updateUnits() {
+        const conversionType = document.getElementById("conversion_type").value;
+        const fromUnit = document.getElementById("from_unit");
+        const toUnit = document.getElementById("to_unit");
+
+        // Clear current options
+        fromUnit.innerHTML = '';
+        toUnit.innerHTML = '';
+
+        let options;
+        if (conversionType === "length") {
+            options = [
+                {value: "m", text: "Meters"},
+                {value: "km", text: "Kilometers"},
+                {value: "ft", text: "Feet"},
+                {value: "inch", text: "Inches"}
+            ];
+        } else if (conversionType === "weight") {
+            options = [
+                {value: "kg", text: "Kilograms"},
+                {value: "lb", text: "Pounds"},
+                {value: "g", text: "Grams"},
+                {value: "oz", text: "Ounces"}
+            ];
+        } else if (conversionType === "temperature") {
+            options = [
+                {value: "c", text: "Celsius"},
+                {value: "f", text: "Fahrenheit"},
+                {value: "k", text: "Kelvin"}
+            ];
+        }
+
+        // Add new options
+        options.forEach(option => {
+            const fromOption = document.createElement("option");
+            fromOption.value = option.value;
+            fromOption.text = option.text;
+            fromUnit.add(fromOption);
+
+            const toOption = document.createElement("option");
+            toOption.value = option.value;
+            toOption.text = option.text;
+            toUnit.add(toOption);
+        });
+    }
+</script>
+
+</body>
+</html>
